@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/iskraman/golang-lib/modules/slice"
-	"github.com/iskraman/golang-lib/modules/syslog"
+	"github.com/iskraman/golang-modules/slice"
+	"github.com/iskraman/golang-modules/syslog"
 )
 
 func main() {

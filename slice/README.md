@@ -1,4 +1,4 @@
-# golang-lib/modules/slice
+# golang-modules/slice
 Golang slice 모듈화
 
 ### func SliceExists
