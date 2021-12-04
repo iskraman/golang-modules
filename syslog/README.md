@@ -10,11 +10,13 @@ func DBG(format string, v ...interface{})
 func ST(format string, v ...interface{})
 func WARN(format string, v ...interface{})
 func ERR(format string, v ...interface{})
-
-로그 레벨에 의한 출력 관리
 ```
 
+로그 레벨에 의한 출력 관리
+
+```html
 [DBG] 2021/12/05 05:01:34 log 12 <br/>
 <span style="color:cyan">[STD]</span> 2021/12/05 05:01:34 log 34 <br/>
 <span style="color:purple">[WAN]</span> 2021/12/05 05:01:34 log 56 <br/>
 <span style="color:red">[ERR]</span> 2021/12/05 05:01:34 log 78 <br/>
+```
