@@ -61,9 +61,9 @@ JSON to Go data decoding
 func Decoding(data []byte, v interface{}) error
 
 (example)
-	u2 := User{}
-	jsonlib.Decoding(enc, &u2)
-	fmt.Printf(%+v\n", u2)
+u2 := User{}
+jsonlib.Decoding(enc, &u2)
+fmt.Printf(%+v\n", u2)
 ```
 
 ### func DecodingStream
@@ -72,9 +72,21 @@ JSON to Go data stream decoding
 func DecodingStream(r io.Reader, v interface{}) error
 
 (example)
-	u3 := User{}
-	rfd, _ := os.Open("out.txt")
-	jsonlib.DecodingStream(rfd, &u3)
-	fmt.Printf("DecodingStream: %+v\n", u3)
-	rfd.Close()
+u3 := User{}
+rfd, _ := os.Open("out.txt")
+jsonlib.DecodingStream(rfd, &u3)
+fmt.Printf("DecodingStream: %+v\n", u3)
+rfd.Close()
+```
+
+### func DecodingMap
+JSON to Go Map decoding
+```
+func DecodingMap(data []byte, v *map[string]interface{}) error
+
+(example)
+var reading map[string]interface{}
+jsonlib.DecodingMap(enc, &reading)
+fmt.Printf("%+v\n", reading)
+fmt.Println(reading["name"], reading["age"])
 ```
