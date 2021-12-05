@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/iskraman/golang-modules/fs"
+	"github.com/iskraman/golang-modules/fslib"
 )
 
 func main() {
@@ -50,8 +50,8 @@ func main() {
 	*/
 
 	// fs test
-	data, _ := fs.FileReader("./fs/readme.txt")
+	data, _ := fslib.FileReader("./fslib/readme.txt")
 	fmt.Println(string(data))
 
-	fs.FileWriter("./test.txt", data, 0644)
+	fslib.FileWriter("./test.txt", data, 0644)
 }
