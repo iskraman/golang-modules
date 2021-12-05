@@ -41,3 +41,8 @@ func DecodingStream(r io.Reader, v interface{}) error {
 	err := dec.Decode(v)
 	return err
 }
+
+func DecodingMap(data []byte, v *map[string]interface{}) error {
+	err := json.Unmarshal(data, v)
+	return err
+}

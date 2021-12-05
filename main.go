@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/iskraman/golang-modules/fslib"
+	"github.com/iskraman/golang-modules/jsonlib"
 )
 
 func main() {
@@ -23,19 +23,24 @@ func main() {
 	*/
 
 	// jsonlib test
+	type User struct {
+		Name string `json:"name"`
+		Age  int    `json:"age,omitempty"`
+	}
+	var u1 = User{Name: "iskra", Age: 10}
+	enc, _ := jsonlib.Encoding(u1)
+	fmt.Println("Encoding:", string(enc))
+
+	u2 := User{}
+	jsonlib.Decoding(enc, &u2)
+	fmt.Printf("Decoding: %+v\n", u2)
+
+	var reading map[string]interface{}
+	jsonlib.DecodingMap(enc, &reading)
+	fmt.Printf("Map Decoding: %+v\n", reading)
+	fmt.Println(reading["name"], reading["age"])
+
 	/*
-		type User struct {
-			Name string `json:"name"`
-			Age  int    `json:"age,omitempty"`
-		}
-		var u1 = User{Name: "iskra", Age: 10}
-		enc, _ := jsonlib.Encoding(u1)
-		fmt.Println("Encoding:", string(enc))
-
-		u2 := User{}
-		jsonlib.Decoding(enc, &u2)
-		fmt.Printf("Decoding: %+v\n", u2)
-
 		jsonlib.EncodingStream(os.Stdout, u1)
 
 		wfd, _ := os.Create("out.txt")
@@ -50,8 +55,10 @@ func main() {
 	*/
 
 	// fs test
-	data, _ := fslib.FileReader("./fslib/readme.txt")
-	fmt.Println(string(data))
+	/*
+		data, _ := fslib.FileReader("./fslib/readme.txt")
+		fmt.Println(string(data))
 
-	fslib.FileWriter("./test.txt", data, 0644)
+		fslib.FileWriter("./test.txt", data, 0644)
+	*/
 }
