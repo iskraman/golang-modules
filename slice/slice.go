@@ -1,12 +1,17 @@
 package slice
 
-import "reflect"
+import (
+	"reflect"
+
+	"github.com/iskraman/golang-modules/syslog"
+)
 
 func SliceExists(slice interface{}, item interface{}) bool {
 	s := reflect.ValueOf(slice)
 
 	if s.Kind() != reflect.Slice {
-		panic("SliceExists() given a non-slice type")
+		syslog.WAR("SliceExists() given a non-slice type")
+		return false
 	}
 
 	for i := 0; i < s.Len(); i++ {

@@ -43,7 +43,7 @@ func TestEncoding(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Encoding() = %v, want %v", got, tt.want)
+				t.Errorf("Encoding() = %v, want %v", string(got), string(tt.want))
 			}
 		})
 	}

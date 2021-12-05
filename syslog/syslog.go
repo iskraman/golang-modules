@@ -37,7 +37,7 @@ func init() {
 	time.LoadLocation("Asia/Seoul")
 	dbg = log.New(os.Stdout, string(colorWhite)+"[DBG] "+string(colorReset), log.LstdFlags)
 	std = log.New(os.Stdout, string(colorCyan)+"[STD] "+string(colorReset), log.LstdFlags)
-	wan = log.New(os.Stdout, string(colorPurple)+"[WAN] "+string(colorReset), log.LstdFlags)
+	wan = log.New(os.Stdout, string(colorPurple)+"[WAR] "+string(colorReset), log.LstdFlags)
 	err = log.New(os.Stdout, string(colorRed)+"[ERR] "+string(colorReset), log.LstdFlags)
 
 	logLevel = DBG_LEVEL
@@ -50,14 +50,14 @@ func DBG(format string, v ...interface{}) {
 	dbg.Printf(format, v...)
 }
 
-func ST(format string, v ...interface{}) {
+func STD(format string, v ...interface{}) {
 	if logLevel > STD_LEVEL {
 		return
 	}
 	std.Printf(format, v...)
 }
 
-func WARN(format string, v ...interface{}) {
+func WAR(format string, v ...interface{}) {
 	if logLevel > WAN_LEVEL {
 		return
 	}
