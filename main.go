@@ -5,8 +5,8 @@ import (
 )
 
 func main() {
-	// slice test
 	/*
+		// slice test
 		items := []int{1, 2, 3, 4, 5, 6}
 		syslog.DBG("%v", slice.SliceExists(items, 5))   // returns true
 		syslog.DBG("%v", slice.SliceExists(items, "5")) // returns false
@@ -19,8 +19,8 @@ func main() {
 	syslog.WAR("%s %d", "system ready", 56)
 	syslog.ERR("%s %d", "system ready", 78)
 
-	// jsonlib test
 	/*
+		// jsonlib test
 		type User struct {
 			Name string `json:"name"`
 			Age  int    `json:"age,omitempty"`
@@ -51,16 +51,16 @@ func main() {
 		rfd.Close()
 	*/
 
-	// fs test
 	/*
+		// fs test
 		data, _ := fslib.FileReader("./fslib/readme.txt")
 		syslog.DBG("%s", string(data))
 
 		fslib.FileWriter("./test.txt", data, 0644)
 	*/
 
-	// websocket test
 	/*
+		// websocket test
 		recvCallBack := func(conn *websocket.Conn) {
 			for {
 				msg, err := websock.Reader(conn)
@@ -75,5 +75,25 @@ func main() {
 			}
 		}
 		websock.ServerRun("localhost", 8080, recvCallBack)
+	*/
+
+	/*
+		// Publisher
+		func main() {
+			client := New("localhost:6379", "changeme", 0)
+			Pub(client, "Project", `{"name":"iskraman", "age":12}`)
+		}
+	*/
+
+	/*
+		// Subscriber
+		func main() {
+			client := New("localhost:6379", "changeme", 0)
+			subs := Sub(client, "Project")
+			for {
+				msg, _ := SubRecvMsg(subs)
+				syslog.STD(msg)
+			}
+		}
 	*/
 }
