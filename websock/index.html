@@ -1,0 +1,30 @@
+<!--
+	$ python -m SimpleHTTPServer
+	Serving HTTP on 0.0.0.0 port 8000 ...
+-->
+
+<html>
+
+	<script>
+		let socket = new WebSocket("ws://localhost:8080/ws");
+		console.log("Attempting Websocket connection");
+
+		socket.onopen = () => {
+			console.log("Successfully connected");
+			socket.send("Hi, from the client!");
+		}
+
+		socket.onclose = (event) => {
+			console.log("Socket closed: ", event);
+		}
+
+		socket.onerror = (error) => {
+			console.log("Socket error: ", error);
+		}
+
+		socket.onmessage = (msg) => {
+			console.log(msg);
+		}
+	</script>
+
+</html>

@@ -54,7 +54,7 @@ func init() {
 	wan = log.New(os.Stdout, string(colorPurple)+"[WAR] "+string(colorReset), log.LstdFlags)
 	err = log.New(os.Stdout, string(colorRed)+"[ERR] "+string(colorReset), log.LstdFlags)
 
-	logLevel = DBG_LEVEL
+	logLevel = STD_LEVEL
 
 	logLevelStr = make(map[int]string, 4)
 	logLevelStr[DBG_LEVEL] = "DBG_LEVEL"

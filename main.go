@@ -1,6 +1,8 @@
 package main
 
-import "github.com/iskraman/golang-modules/syslog"
+import (
+	"github.com/iskraman/golang-modules/syslog"
+)
 
 func main() {
 	// slice test
@@ -11,7 +13,7 @@ func main() {
 	*/
 
 	// syslog test
-	syslog.SetLogLevel(syslog.STD_LEVEL)
+	syslog.SetLogLevel(syslog.DBG_LEVEL)
 	syslog.DBG("%s %d", "system ready", 12)
 	syslog.STD("%s %d", "system ready", 34)
 	syslog.WAR("%s %d", "system ready", 56)
@@ -55,5 +57,23 @@ func main() {
 		syslog.DBG("%s", string(data))
 
 		fslib.FileWriter("./test.txt", data, 0644)
+	*/
+
+	// websocket test
+	/*
+		recvCallBack := func(conn *websocket.Conn) {
+			for {
+				msg, err := websock.Reader(conn)
+				if err != nil {
+					syslog.DBGLN(err)
+					return
+				}
+
+				// TODO : Echo test
+				syslog.DBGLN("Recv:", msg)
+				websock.Sender(conn, msg)
+			}
+		}
+		websock.ServerRun("localhost", 8080, recvCallBack)
 	*/
 }
