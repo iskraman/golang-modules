@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 
-	"github.com/iskraman/golang-modules/syslog"
+	"github.com/iskraman/golang-modules/utils/syslog"
 )
 
 func FileReader(filename string) ([]byte, error) {
