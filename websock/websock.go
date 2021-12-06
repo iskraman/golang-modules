@@ -74,7 +74,6 @@ func ServerRun(addr string, port int, cb func(conn *websocket.Conn)) {
 		syslog.STD("Client successfully connected...")
 
 		go cb(ws)
-		//go Reader(ws)
 	})
 
 	server := fmt.Sprintf("%s:%d", addr, port)
@@ -86,10 +85,3 @@ func ServerRun(addr string, port int, cb func(conn *websocket.Conn)) {
 		panic(err)
 	}
 }
-
-/*
-func main() {
-	//websock := Websocket{}
-	websock.ServerRun("", 8080)
-}
-*/
