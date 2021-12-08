@@ -18,16 +18,16 @@ func New(addr string, passwd string, db int) *redis.Client {
 	return redisClient
 }
 
-func Pub(client *redis.Client, title string, data string) error {
-	err := client.Publish(ctx, title, data).Err()
+func Pub(rdb *redis.Client, title string, data string) error {
+	err := rdb.Publish(ctx, title, data).Err()
 	if err != nil {
 		syslog.WAR("Publish failed: %v", err)
 	}
 	return err
 }
 
-func Sub(client *redis.Client, title string) *redis.PubSub {
-	subscriber := client.Subscribe(ctx, title)
+func Sub(rdb *redis.Client, title string) *redis.PubSub {
+	subscriber := rdb.Subscribe(ctx, title)
 	return subscriber
 }
 
@@ -39,16 +39,16 @@ func SubRecvMsg(subscriber *redis.PubSub) (string, error) {
 /*
 // Publisher
 func main() {
-	client := New("localhost:6379", "changeme", 0)
-	Pub(client, "Project", `{"name":"iskraman", "age":12}`)
+	rdb := New("localhost:6379", "changeme", 0)
+	Pub(rdb, "Project", `{"name":"iskraman", "age":12}`)
 }
 */
 
 /*
 // Subscriber
 func main() {
-	client := New("localhost:6379", "changeme", 0)
-	subs := Sub(client, "Project")
+	rdb := New("localhost:6379", "changeme", 0)
+	subs := Sub(rdb, "Project")
 	for {
 		msg, _ := SubRecvMsg(subs)
 		syslog.STD(msg)

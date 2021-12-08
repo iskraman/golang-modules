@@ -1,7 +1,8 @@
 package main
 
 import (
-	"github.com/iskraman/golang-modules/syslog"
+	"github.com/iskraman/golang-modules/redislib"
+	"github.com/iskraman/golang-modules/utils/syslog"
 )
 
 func main() {
@@ -79,21 +80,30 @@ func main() {
 
 	/*
 		// Publisher
-		func main() {
-			client := New("localhost:6379", "changeme", 0)
-			Pub(client, "Project", `{"name":"iskraman", "age":12}`)
-		}
+		rdb := redis.New("localhost:6379", "changeme", 0)
+		redis.Pub(rdb, "Project", `{"name":"iskraman", "age":12}`)
 	*/
 
 	/*
 		// Subscriber
-		func main() {
-			client := New("localhost:6379", "changeme", 0)
-			subs := Sub(client, "Project")
-			for {
-				msg, _ := SubRecvMsg(subs)
-				syslog.STD(msg)
-			}
+		rdb := redislib.New("localhost:6379", "changeme", 0)
+		subs := redislib.Sub(rdb, "Project")
+		for {
+			msg, _ := redislib.SubRecvMsg(subs)
+			syslog.STD(msg)
 		}
 	*/
+
+	// Redis Cache
+	rdb := redislib.New("localhost:6379", "changeme", 0)
+	redislib.Set(rdb, "key1", "my value")
+	val, err := redislib.Get(rdb, "key1") // Exist key
+	syslog.STDLN(val, err)
+
+	val2, err := redislib.Get(rdb, "key2") // Not exist key
+	if err != nil {
+		syslog.WARLN(err)
+	} else {
+		syslog.STDLN(val2)
+	}
 }
