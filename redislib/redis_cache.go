@@ -27,7 +27,7 @@ func Get(rdb *redis.Client, key string) (string, error) {
 		e := errorMsg{msg: "Does not exist key!"}
 		return "", e
 	} else if err != nil {
-		syslog.ERRLN(err)
+		syslog.WARLN(err)
 	}
 	return val, err
 }
