@@ -139,4 +139,5 @@ func main() {
 	rslt = redislib.Del(rdb, "media-server-1")
 	all, _ = redislib.HGetAll(rdb, "media-server-1")
 	syslog.STD("Del:%v", rslt)
+
 }
