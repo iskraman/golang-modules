@@ -1,18 +1,15 @@
-package main
+package sysinfo
 
 import (
 	"strconv"
-	"time"
 
-	"github.com/iskraman/golang-modules/jsonlib"
-	"github.com/iskraman/golang-modules/utils/syslog"
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/host"
 	"github.com/shirou/gopsutil/mem"
 )
 
-type HostInfo struct {
+type SysInfo struct {
 	Hostname string `json:"hostname"`
 	Platform string `json:"platform"`
 	Uuid     string `json:"uuid"`
@@ -84,10 +81,10 @@ func Hdd() HddInfo {
 	return hddinfo
 }
 
-func SystemInfo() HostInfo {
+func System() SysInfo {
 	hostStat, _ := host.Info()
 
-	sysinfo := HostInfo{}
+	sysinfo := SysInfo{}
 	sysinfo.Platform = hostStat.Platform
 	sysinfo.Hostname = hostStat.Hostname
 	sysinfo.Uuid = hostStat.HostID
@@ -100,11 +97,13 @@ func SystemInfo() HostInfo {
 	return sysinfo
 }
 
+/*
 func main() {
 	for {
-		sysinfo := SystemInfo()
+		sysinfo := System()
 		json, _ := jsonlib.EncodingIndent(sysinfo)
 		syslog.STDLN(string(json))
 		time.Sleep(time.Second * 2)
 	}
 }
+*/

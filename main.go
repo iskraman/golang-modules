@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/iskraman/golang-modules/redislib"
-	"github.com/iskraman/golang-modules/utils/syslog"
+	"github.com/iskraman/golang-modules/jsonlib"
+	"github.com/iskraman/golang-modules/sysinfo"
+	"github.com/iskraman/golang-modules/syslog"
 )
 
 func main() {
@@ -94,50 +95,56 @@ func main() {
 		}
 	*/
 
-	// Redis Set/Get cache
-	rdb := redislib.New("localhost:6379", "changeme", 0)
-	redislib.Set(rdb, "key1", "my value")
-	val, err := redislib.Get(rdb, "key1") // Exist key
-	syslog.STDLN(val, err)
+	/*
+		// Redis Set/Get cache
+		rdb := redislib.New("localhost:6379", "changeme", 0)
+		redislib.Set(rdb, "key1", "my value")
+		val, err := redislib.Get(rdb, "key1") // Exist key
+		syslog.STDLN(val, err)
 
-	val2, err := redislib.Get(rdb, "key2") // Not exist key
-	if err != nil {
-		syslog.WARLN(err)
-	} else {
-		syslog.STDLN(val2)
-	}
+		val2, err := redislib.Get(rdb, "key2") // Not exist key
+		if err != nil {
+			syslog.WARLN(err)
+		} else {
+			syslog.STDLN(val2)
+		}
 
-	// Redis HSet/HGet cache
-	server := map[string]interface{}{"cpu": 25.0, "mem": 10.5, "hdd": "40"}
-	redislib.HSet(rdb, "media-server-0", server)
-	redislib.HSet(rdb, "media-server-1", map[string]interface{}{"cpu": 10, "mem": 15, "hdd": "20"})
+		// Redis HSet/HGet cache
+		server := map[string]interface{}{"cpu": 25.0, "mem": 10.5, "hdd": "40"}
+		redislib.HSet(rdb, "media-server-0", server)
+		redislib.HSet(rdb, "media-server-1", map[string]interface{}{"cpu": 10, "mem": 15, "hdd": "20"})
 
-	cpu, _ := redislib.HGet(rdb, "media-server-0", "cpu")
-	mem, _ := redislib.HGet(rdb, "media-server-0", "mem")
-	hdd, _ := redislib.HGet(rdb, "media-server-0", "hdd")
-	syslog.STD("cpu:%v, mem:%v, hdd:%v", cpu, mem, hdd)
+		cpu, _ := redislib.HGet(rdb, "media-server-0", "cpu")
+		mem, _ := redislib.HGet(rdb, "media-server-0", "mem")
+		hdd, _ := redislib.HGet(rdb, "media-server-0", "hdd")
+		syslog.STD("cpu:%v, mem:%v, hdd:%v", cpu, mem, hdd)
 
-	// Redis HGetAll
-	all, _ := redislib.HGetAll(rdb, "media-server-1")
-	for k, v := range all {
-		syslog.STD("%v(%T):%v(%T)", k, k, v, v)
-	}
+		// Redis HGetAll
+		all, _ := redislib.HGetAll(rdb, "media-server-1")
+		for k, v := range all {
+			syslog.STD("%v(%T):%v(%T)", k, k, v, v)
+		}
 
-	// key update
-	redislib.HSet(rdb, "media-server-1", map[string]interface{}{"hdd": "100"})
-	all, _ = redislib.HGetAll(rdb, "media-server-1")
-	for k, v := range all {
-		syslog.STD("Update: %v(%T):%v(%T)", k, k, v, v)
-	}
+		// key update
+		redislib.HSet(rdb, "media-server-1", map[string]interface{}{"hdd": "100"})
+		all, _ = redislib.HGetAll(rdb, "media-server-1")
+		for k, v := range all {
+			syslog.STD("Update: %v(%T):%v(%T)", k, k, v, v)
+		}
 
-	// Redis HDel (default field)
-	rslt := redislib.HDel(rdb, "media-server-0", "mem")
-	mem, _ = redislib.HGet(rdb, "media-server-0", "mem")
-	syslog.STD("HDel:%v, cpu:%v, mem:%v, hdd:%v", rslt, cpu, mem, hdd)
+		// Redis HDel (default field)
+		rslt := redislib.HDel(rdb, "media-server-0", "mem")
+		mem, _ = redislib.HGet(rdb, "media-server-0", "mem")
+		syslog.STD("HDel:%v, cpu:%v, mem:%v, hdd:%v", rslt, cpu, mem, hdd)
 
-	// Redis Del (default key)
-	rslt = redislib.Del(rdb, "media-server-1")
-	all, _ = redislib.HGetAll(rdb, "media-server-1")
-	syslog.STD("Del:%v", rslt)
+		// Redis Del (default key)
+		rslt = redislib.Del(rdb, "media-server-1")
+		all, _ = redislib.HGetAll(rdb, "media-server-1")
+		syslog.STD("Del:%v", rslt)
+	*/
 
+	// System info [Cpu, Mem, Hdd, Host]
+	sysinfo := sysinfo.System()
+	json, _ := jsonlib.EncodingIndent(sysinfo)
+	syslog.STDLN(string(json))
 }
