@@ -122,4 +122,21 @@ func main() {
 	for k, v := range all {
 		syslog.STD("%v(%T):%v(%T)", k, k, v, v)
 	}
+
+	// key update
+	redislib.HSet(rdb, "media-server-1", map[string]interface{}{"hdd": "100"})
+	all, _ = redislib.HGetAll(rdb, "media-server-1")
+	for k, v := range all {
+		syslog.STD("Update: %v(%T):%v(%T)", k, k, v, v)
+	}
+
+	// Redis HDel (default field)
+	rslt := redislib.HDel(rdb, "media-server-0", "mem")
+	mem, _ = redislib.HGet(rdb, "media-server-0", "mem")
+	syslog.STD("HDel:%v, cpu:%v, mem:%v, hdd:%v", rslt, cpu, mem, hdd)
+
+	// Redis Del (default key)
+	rslt = redislib.Del(rdb, "media-server-1")
+	all, _ = redislib.HGetAll(rdb, "media-server-1")
+	syslog.STD("Del:%v", rslt)
 }

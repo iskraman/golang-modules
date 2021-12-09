@@ -29,8 +29,8 @@ func Set(rdb *redis.Client, key string, val string) error {
 	return err
 }
 
-func HSet(rdb *redis.Client, key string, val map[string]interface{}) error {
-	err := rdb.HSet(ctx, key, val).Err()
+func HSet(rdb *redis.Client, key string, field map[string]interface{}) error {
+	err := rdb.HSet(ctx, key, field).Err()
 	if err != nil {
 		syslog.WARLN(err)
 	}
@@ -48,8 +48,8 @@ func Get(rdb *redis.Client, key string) (string, error) {
 	return val, err
 }
 
-func HGet(rdb *redis.Client, key string, val string) (string, error) {
-	val, err := rdb.HGet(ctx, key, val).Result()
+func HGet(rdb *redis.Client, key string, field string) (string, error) {
+	val, err := rdb.HGet(ctx, key, field).Result()
 	if err == redis.Nil {
 		e := errorMsg{msg: "Does not exist key!"}
 		return val, e
@@ -60,12 +60,30 @@ func HGet(rdb *redis.Client, key string, val string) (string, error) {
 }
 
 func HGetAll(rdb *redis.Client, key string) (map[string]string, error) {
-	val, err := rdb.HGetAll(ctx, key).Result()
+	field, err := rdb.HGetAll(ctx, key).Result()
 	if err == redis.Nil {
 		e := errorMsg{msg: "Does not exist key!"}
-		return val, e
+		return field, e
 	} else if err != nil {
 		syslog.WARLN(err)
 	}
-	return val, err
+	return field, err
+}
+
+func Del(rdb *redis.Client, key string) bool {
+	rslt, _ := rdb.Del(ctx, key).Result()
+	if rslt == 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func HDel(rdb *redis.Client, key string, field string) bool {
+	rslt, _ := rdb.HDel(ctx, key, field).Result()
+	if rslt == 1 {
+		return true
+	} else {
+		return false
+	}
 }
