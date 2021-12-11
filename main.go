@@ -67,7 +67,7 @@ func main() {
 		// websocket test
 		recvCallBack := func(conn *websocket.Conn) {
 			for {
-				msg, err := websock.Reader(conn)
+				msg, err := websocklib.Reader(conn)
 				if err != nil {
 					syslog.DBGLN(err)
 					return
@@ -75,10 +75,10 @@ func main() {
 
 				// TODO : Echo test
 				syslog.DBGLN("Recv:", msg)
-				websock.Sender(conn, msg)
+				websocklib.Sender(conn, msg)
 			}
 		}
-		websock.ServerRun("localhost", 8080, recvCallBack)
+		websocklib.ServerRun("localhost", 8080, recvCallBack)
 	*/
 
 	/*
