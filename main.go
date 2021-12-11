@@ -1,8 +1,10 @@
 package main
 
 import (
+	"time"
+
 	"github.com/iskraman/golang-modules/jsonlib"
-	"github.com/iskraman/golang-modules/sysinfo"
+	"github.com/iskraman/golang-modules/jwtlib"
 	"github.com/iskraman/golang-modules/syslog"
 )
 
@@ -143,8 +145,38 @@ func main() {
 		syslog.STD("Del:%v", rslt)
 	*/
 
-	// System info [Cpu, Mem, Hdd, Host]
-	sysinfo := sysinfo.System()
-	json, _ := jsonlib.EncodingIndent(sysinfo)
-	syslog.STDLN(string(json))
+	/*
+		// System info [Cpu, Mem, Hdd, Host]
+		sysinfo := sysinfo.System()
+		json, _ := jsonlib.EncodingIndent(sysinfo)
+		syslog.STDLN(string(json))
+	*/
+
+	// jwtlib (jason web token)
+	type UserInfo struct {
+		Username string `json:"username"`
+		Age      int    `json:"age"`
+	}
+
+	user := UserInfo{Username: "iskraman", Age: 12}
+	tokenString, _ := jwtlib.New(user, 5)
+	syslog.DBGLN("[TOKEN]", tokenString)
+
+	userdata, _ := jwtlib.GetData(tokenString)
+
+	userInfo := UserInfo{}
+	jsonlib.Decoding(userdata, &userInfo)
+	syslog.DBG("[GET] %+v", userInfo)
+
+	for {
+		expireTime, _ := jwtlib.GetExpireTime(tokenString)
+
+		if expireTime < 1 {
+			tokenString, _ = jwtlib.RefreshExpireTime(tokenString, 10)
+		}
+
+		syslog.STD("%.2f", expireTime)
+		time.Sleep(time.Second * 1)
+	}
+
 }

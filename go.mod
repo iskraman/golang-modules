@@ -9,6 +9,7 @@ require (
 	github.com/cweill/gotests v1.6.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
+	github.com/golang-jwt/jwt/v4 v4.2.0 // indirect
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
 	github.com/tklauser/go-sysconf v0.3.9 // indirect
