@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/go-redis/redis/v8"
-	"github.com/iskraman/golang-modules/utils/syslog"
+	"github.com/iskraman/golang-modules/syslog"
 )
 
 var ctx = context.Background()

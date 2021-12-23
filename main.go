@@ -1,10 +1,8 @@
 package main
 
 import (
-	"time"
-
 	"github.com/iskraman/golang-modules/jsonlib"
-	"github.com/iskraman/golang-modules/jwtlib"
+	"github.com/iskraman/golang-modules/sysinfo"
 	"github.com/iskraman/golang-modules/syslog"
 )
 
@@ -101,82 +99,98 @@ func main() {
 		// Redis Set/Get cache
 		rdb := redislib.New("localhost:6379", "changeme", 0)
 		redislib.Set(rdb, "key1", "my value")
-		val, err := redislib.Get(rdb, "key1") // Exist key
-		syslog.STDLN(val, err)
+		val, _ := redislib.Get(rdb, "key1") // Exist key
+		syslog.STDLN(val)
 
-		val2, err := redislib.Get(rdb, "key2") // Not exist key
-		if err != nil {
-			syslog.WARLN(err)
-		} else {
-			syslog.STDLN(val2)
-		}
+			val2, err := redislib.Get(rdb, "key2") // Not exist key
+			if err != nil {
+				syslog.WARLN(err)
+			} else {
+				syslog.STDLN(val2)
+			}
 
-		// Redis HSet/HGet cache
-		server := map[string]interface{}{"cpu": 25.0, "mem": 10.5, "hdd": "40"}
-		redislib.HSet(rdb, "media-server-0", server)
-		redislib.HSet(rdb, "media-server-1", map[string]interface{}{"cpu": 10, "mem": 15, "hdd": "20"})
+				// Redis HSet/HGet cache
+				server := map[string]interface{}{"cpu": 25.0, "mem": 10.5, "hdd": "40"}
+				redislib.HSet(rdb, "media-server-0", server)
+				redislib.HSet(rdb, "media-server-1", map[string]interface{}{"cpu": 10, "mem": 15, "hdd": "20"})
 
-		cpu, _ := redislib.HGet(rdb, "media-server-0", "cpu")
-		mem, _ := redislib.HGet(rdb, "media-server-0", "mem")
-		hdd, _ := redislib.HGet(rdb, "media-server-0", "hdd")
-		syslog.STD("cpu:%v, mem:%v, hdd:%v", cpu, mem, hdd)
+				cpu, _ := redislib.HGet(rdb, "media-server-0", "cpu")
+				mem, _ := redislib.HGet(rdb, "media-server-0", "mem")
+				hdd, _ := redislib.HGet(rdb, "media-server-0", "hdd")
+				syslog.STD("cpu:%v, mem:%v, hdd:%v", cpu, mem, hdd)
 
-		// Redis HGetAll
-		all, _ := redislib.HGetAll(rdb, "media-server-1")
-		for k, v := range all {
-			syslog.STD("%v(%T):%v(%T)", k, k, v, v)
-		}
+				// Redis HGetAll
+				all, _ := redislib.HGetAll(rdb, "media-server-1")
+				for k, v := range all {
+					syslog.STD("%v(%T):%v(%T)", k, k, v, v)
+				}
 
-		// key update
-		redislib.HSet(rdb, "media-server-1", map[string]interface{}{"hdd": "100"})
-		all, _ = redislib.HGetAll(rdb, "media-server-1")
-		for k, v := range all {
-			syslog.STD("Update: %v(%T):%v(%T)", k, k, v, v)
-		}
+				// key update
+				redislib.HSet(rdb, "media-server-1", map[string]interface{}{"hdd": "100"})
+				all, _ = redislib.HGetAll(rdb, "media-server-1")
+				for k, v := range all {
+					syslog.STD("Update: %v(%T):%v(%T)", k, k, v, v)
+				}
 
-		// Redis HDel (default field)
-		rslt := redislib.HDel(rdb, "media-server-0", "mem")
-		mem, _ = redislib.HGet(rdb, "media-server-0", "mem")
-		syslog.STD("HDel:%v, cpu:%v, mem:%v, hdd:%v", rslt, cpu, mem, hdd)
+				// Redis HDel (default field)
+				rslt := redislib.HDel(rdb, "media-server-0", "mem")
+				mem, _ = redislib.HGet(rdb, "media-server-0", "mem")
+				syslog.STD("HDel:%v, cpu:%v, mem:%v, hdd:%v", rslt, cpu, mem, hdd)
 
-		// Redis Del (default key)
-		rslt = redislib.Del(rdb, "media-server-1")
-		all, _ = redislib.HGetAll(rdb, "media-server-1")
-		syslog.STD("Del:%v", rslt)
+				// Redis Del (default key)
+				rslt = redislib.Del(rdb, "media-server-1")
+				all, _ = redislib.HGetAll(rdb, "media-server-1")
+				syslog.STD("Del:%v", rslt)
 	*/
 
 	/*
-		// System info [Cpu, Mem, Hdd, Host]
-		sysinfo := sysinfo.System()
-		json, _ := jsonlib.EncodingIndent(sysinfo)
-		syslog.STDLN(string(json))
-	*/
-
-	// jwtlib (jason web token)
-	type UserInfo struct {
-		Username string `json:"username"`
-		Age      int    `json:"age"`
-	}
-
-	user := UserInfo{Username: "iskraman", Age: 12}
-	tokenString, _ := jwtlib.New(user, 5)
-	syslog.DBGLN("[TOKEN]", tokenString)
-
-	userdata, _ := jwtlib.GetData(tokenString)
-
-	userInfo := UserInfo{}
-	jsonlib.Decoding(userdata, &userInfo)
-	syslog.DBG("[GET] %+v", userInfo)
-
-	for {
-		expireTime, _ := jwtlib.GetExpireTime(tokenString)
-
-		if expireTime < 1 {
-			tokenString, _ = jwtlib.RefreshExpireTime(tokenString, 10)
+		// Redis SetJson/GetJson cache
+		type testValue struct {
+			Name  string `json:"name"`
+			Email string `json:"email"`
 		}
 
-		syslog.STD("%.2f", expireTime)
-		time.Sleep(time.Second * 1)
-	}
+		rdb := redislib.New("localhost:6379", "changeme", 0)
+		key := "sampleKey"
+		value := &testValue{Name: "iskra", Email: "iskraman@gmail.com"}
+		redislib.SetJson(rdb, key, value)
 
+		value2 := &testValue{}
+		val, _ := redislib.GetJson(rdb, "sampleKey", value2) // Exist key
+		syslog.STDLN(val)
+	*/
+
+	/*
+		// jwtlib (jason web token)
+		type UserInfo struct {
+			Username string `json:"username"`
+			Age      int    `json:"age"`
+		}
+
+		user := UserInfo{Username: "iskraman", Age: 12}
+		tokenString, _ := jwtlib.New(user, 5)
+		syslog.DBGLN("[TOKEN]", tokenString)
+
+		userdata, _ := jwtlib.GetData(tokenString)
+
+		userInfo := UserInfo{}
+		jsonlib.Decoding(userdata, &userInfo)
+		syslog.DBG("[GET] %+v", userInfo)
+
+		for {
+			expireTime, _ := jwtlib.GetExpireTime(tokenString)
+
+			if expireTime < 1 {
+				tokenString, _ = jwtlib.RefreshExpireTime(tokenString, 10)
+			}
+
+			syslog.STD("%.2f", expireTime)
+			time.Sleep(time.Second * 1)
+		}
+	*/
+
+	// System info [Cpu, Mem, Hdd, Host]
+	sysinfo := sysinfo.System()
+	json, _ := jsonlib.EncodingIndent(sysinfo)
+	syslog.STDLN(string(json))
 }

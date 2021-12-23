@@ -1,8 +1,10 @@
 package redislib
 
 import (
+	"encoding/json"
+
 	"github.com/go-redis/redis/v8"
-	"github.com/iskraman/golang-modules/utils/syslog"
+	"github.com/iskraman/golang-modules/syslog"
 )
 
 type errorMsg struct {
@@ -25,6 +27,7 @@ func Set(rdb *redis.Client, key string, val string) error {
 	err := rdb.Set(ctx, key, val, 0).Err()
 	if err != nil {
 		syslog.WARLN(err)
+		return err
 	}
 	return err
 }
@@ -33,6 +36,22 @@ func HSet(rdb *redis.Client, key string, field map[string]interface{}) error {
 	err := rdb.HSet(ctx, key, field).Err()
 	if err != nil {
 		syslog.WARLN(err)
+		return err
+	}
+	return err
+}
+
+func SetJson(rdb *redis.Client, key string, val interface{}) error {
+	jsonVal, err := json.Marshal(val)
+	if err != nil {
+		syslog.WARLN(err)
+		return err
+	}
+
+	err = rdb.Set(ctx, key, jsonVal, 0).Err()
+	if err != nil {
+		syslog.WARLN(err)
+		return err
 	}
 	return err
 }
@@ -44,7 +63,9 @@ func Get(rdb *redis.Client, key string) (string, error) {
 		return val, e
 	} else if err != nil {
 		syslog.WARLN(err)
+		return val, err
 	}
+
 	return val, err
 }
 
@@ -55,7 +76,27 @@ func HGet(rdb *redis.Client, key string, field string) (string, error) {
 		return val, e
 	} else if err != nil {
 		syslog.WARLN(err)
+		return val, err
 	}
+	return val, err
+}
+
+func GetJson(rdb *redis.Client, key string, data interface{}) (string, error) {
+	val, err := rdb.Get(ctx, key).Result()
+	if err == redis.Nil {
+		e := errorMsg{msg: "Does not exist key!"}
+		return val, e
+	} else if err != nil {
+		syslog.WARLN(err)
+		return val, err
+	}
+
+	err = json.Unmarshal([]byte(val), &data)
+	if err != nil {
+		syslog.WARLN(err)
+		return val, err
+	}
+
 	return val, err
 }
 
@@ -66,6 +107,7 @@ func HGetAll(rdb *redis.Client, key string) (map[string]string, error) {
 		return field, e
 	} else if err != nil {
 		syslog.WARLN(err)
+		return field, err
 	}
 	return field, err
 }
