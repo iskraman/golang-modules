@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/iskraman/golang-modules/utils/syslog"
+	"github.com/iskraman/golang-modules/syslog"
 )
 
 /* messageType: https://www.rfc-editor.org/rfc/rfc6455.html#section-11.8
