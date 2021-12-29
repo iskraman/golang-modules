@@ -33,6 +33,11 @@ func Sub(rdb *redis.Client, title string) *redis.PubSub {
 
 func SubRecvMsg(subscriber *redis.PubSub) (string, error) {
 	msg, err := subscriber.ReceiveMessage(ctx)
+	if err != nil {
+		syslog.WARLN("Gateway subscriber failed:", err)
+		return "", err
+	}
+
 	return msg.Payload, err
 }
 

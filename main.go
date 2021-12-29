@@ -1,8 +1,7 @@
 package main
 
 import (
-	"github.com/iskraman/golang-modules/jsonlib"
-	"github.com/iskraman/golang-modules/sysinfo"
+	"github.com/iskraman/golang-modules/redislib"
 	"github.com/iskraman/golang-modules/syslog"
 )
 
@@ -143,21 +142,28 @@ func main() {
 				syslog.STD("Del:%v", rslt)
 	*/
 
+	// Redis SetJson/GetJson cache
+	type testValue struct {
+		Name  string `json:"name"`
+		Email string `json:"email"`
+	}
+
+	rdb := redislib.New("localhost:6379", "changeme", 0)
+	key := "sampleKey"
+	value := &testValue{Name: "iskra", Email: "iskraman@gmail.com"}
+	redislib.SetJson(rdb, key, value)
+
+	value2 := testValue{}
+	redislib.GetJson(rdb, "sampleKey", &value2) // Exist key
+	syslog.STDLN(value2)
+
 	/*
-		// Redis SetJson/GetJson cache
-		type testValue struct {
-			Name  string `json:"name"`
-			Email string `json:"email"`
-		}
-
+		// redis keys pattern
 		rdb := redislib.New("localhost:6379", "changeme", 0)
-		key := "sampleKey"
-		value := &testValue{Name: "iskra", Email: "iskraman@gmail.com"}
-		redislib.SetJson(rdb, key, value)
-
-		value2 := &testValue{}
-		val, _ := redislib.GetJson(rdb, "sampleKey", value2) // Exist key
-		syslog.STDLN(val)
+		keys := redislib.Keys(rdb, "MEDIA_SERVER:*")
+		for _, key := range keys {
+			syslog.STDLN("key:", key)
+		}
 	*/
 
 	/*
@@ -189,8 +195,10 @@ func main() {
 		}
 	*/
 
-	// System info [Cpu, Mem, Hdd, Host]
-	sysinfo := sysinfo.System()
-	json, _ := jsonlib.EncodingIndent(sysinfo)
-	syslog.STDLN(string(json))
+	/*
+		// System info [Cpu, Mem, Hdd, Host]
+		sysinfo := sysinfo.System()
+		json, _ := jsonlib.EncodingIndent(sysinfo)
+		syslog.STDLN(string(json))
+	*/
 }

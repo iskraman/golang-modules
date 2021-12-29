@@ -81,23 +81,47 @@ func HGet(rdb *redis.Client, key string, field string) (string, error) {
 	return val, err
 }
 
-func GetJson(rdb *redis.Client, key string, data interface{}) (string, error) {
+func GetJson(rdb *redis.Client, key string, data interface{}) error {
 	val, err := rdb.Get(ctx, key).Result()
 	if err == redis.Nil {
 		e := errorMsg{msg: "Does not exist key!"}
-		return val, e
+		return e
 	} else if err != nil {
 		syslog.WARLN(err)
-		return val, err
+		return err
 	}
 
-	err = json.Unmarshal([]byte(val), &data)
+	err = json.Unmarshal([]byte(val), data)
 	if err != nil {
 		syslog.WARLN(err)
-		return val, err
+		return err
 	}
 
-	return val, err
+	return err
+}
+
+func Keys(rdb *redis.Client, key string) []string {
+	var cursor uint64
+	var keys []string
+	var err error
+	for {
+		keys, cursor, err = rdb.Scan(ctx, cursor, key, 0).Result()
+		if err != nil {
+			syslog.WARLN(err)
+		}
+
+		/*
+			for _, key := range keys {
+				fmt.Println("key", key)
+			}
+		*/
+
+		if cursor == 0 { // no more keys
+			break
+		}
+	}
+
+	return keys
 }
 
 func HGetAll(rdb *redis.Client, key string) (map[string]string, error) {
