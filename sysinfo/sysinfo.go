@@ -10,34 +10,34 @@ import (
 )
 
 type SysInfo struct {
-	Hostname string `json:"hostname"`
-	Platform string `json:"platform"`
-	Uuid     string `json:"uuid"`
-	Uptime   string `json:"uptime"`
+	Hostname string `json:"hostname,omitempty"`
+	Platform string `json:"platform,omitempty"`
+	Uuid     string `json:"uuid,omitempty"`
+	Uptime   string `json:"uptime,omitempty"`
 
-	Cpu CpuInfo `json:"cpu"`
-	Mem MemInfo `json:"mem"`
-	Hdd HddInfo `json:"hdd"`
+	Cpu CpuInfo `json:"cpu,omitempty"`
+	Mem MemInfo `json:"mem,omitempty"`
+	Hdd HddInfo `json:"hdd,omitempty"`
 }
 
 type CpuInfo struct {
-	Model   string `json:"model"`
-	Speed   string `json:"speed"`
-	Core    string `json:"core"`
-	Percent string `json:"percent"`
+	Model   string `json:"model,omitempty"`
+	Speed   string `json:"speed,omitempty"`
+	Core    string `json:"core,omitempty"`
+	Percent string `json:"percent,omitempty"`
 }
 
 type MemInfo struct {
-	Total   string `json:"total"`
-	Free    string `json:"free"`
-	Percent string `json:"percent"`
+	Total   string `json:"total,omitempty"`
+	Free    string `json:"free,omitempty"`
+	Percent string `json:"percent,omitempty"`
 }
 
 type HddInfo struct {
-	Total   string `json:"total"`
-	Used    string `json:"used"`
-	Free    string `json:"free"`
-	Percent string `json:"percent"`
+	Total   string `json:"total,omitempty"`
+	Used    string `json:"used,omitempty"`
+	Free    string `json:"free,omitempty"`
+	Percent string `json:"percent,omitempty"`
 }
 
 func Cpu() CpuInfo {
