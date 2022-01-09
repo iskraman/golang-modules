@@ -1,7 +1,9 @@
 package main
 
 import (
-	"github.com/iskraman/golang-modules/redislib"
+	"fmt"
+
+	shm "github.com/iskraman/golang-modules/shmlib"
 	"github.com/iskraman/golang-modules/syslog"
 )
 
@@ -148,14 +150,16 @@ func main() {
 		Email string `json:"email"`
 	}
 
-	rdb := redislib.New("localhost:6379", "changeme", 0)
-	key := "sampleKey"
-	value := &testValue{Name: "iskra", Email: "iskraman@gmail.com"}
-	redislib.SetJson(rdb, key, value)
+	/*
+		rdb := redislib.New("localhost:6379", "changeme", 0)
+		key := "sampleKey"
+		value := &testValue{Name: "iskra", Email: "iskraman@gmail.com"}
+		redislib.SetJson(rdb, key, value)
 
-	value2 := testValue{}
-	redislib.GetJson(rdb, "sampleKey", &value2) // Exist key
-	syslog.STDLN(value2)
+		value2 := testValue{}
+		redislib.GetJson(rdb, "sampleKey", &value2) // Exist key
+		syslog.STDLN(value2)
+	*/
 
 	/*
 		// redis keys pattern
@@ -201,4 +205,24 @@ func main() {
 		json, _ := jsonlib.EncodingIndent(sysinfo)
 		syslog.STDLN(string(json))
 	*/
+
+	// System v shared-memory
+	shmId, err := shm.Get(0x1000, 10, shm.IPC_CREAT|0666)
+	fmt.Println(shmId, err)
+
+	data, err := shm.At(shmId, 0, 0)
+	fmt.Println(data, err)
+
+	size, err := shm.Size(shmId)
+	fmt.Println(size, err)
+
+	err = shm.Rm(shmId)
+	if err != nil {
+		fmt.Printf("Rm: %v", err)
+	}
+
+	err = shm.Dt(data)
+	if err != nil {
+		fmt.Printf("Dt: %v", err)
+	}
 }
