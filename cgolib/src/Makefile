@@ -6,7 +6,7 @@ dynamic:
 	rm -f a.o
 
 static:
-	gcc -c a.c
-	ar rc libmylib.a a.o
+	arch -x86_64 gcc -c a.c
+	ar rcs libmylib.a a.o
 	ranlib libmylib.a
 	rm -f a.o

@@ -2,7 +2,7 @@ package cgolib
 
 /*
 #cgo CFLAGS: -I./src
-#cgo LDFLAGS: -L./src -lmylib -Wl,-rpath=./src
+#cgo LDFLAGS: -L./src -lmylib
 #include "a.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -11,15 +11,14 @@ import "C"
 
 import (
 	"fmt"
-	"unsafe"
 )
 
-func main_test() {
+func main() {
 	fmt.Println("-------------------------------")
 
-	str := C.CString("Hello C library")
-	C.testCFunc(str)
-	C.free(unsafe.Pointer(str))
+	//str := C.CString("Hello C library")
+	C.testCFunc()
+	//C.free(unsafe.Pointer(str))
 
 	fmt.Println("-------------------------------")
 }

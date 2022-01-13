@@ -5,4 +5,4 @@ struct myStruct {
 	char *ptr;
 };
 
-void testCFunc(char *s);
+void testCFunc();
