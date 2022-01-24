@@ -7,12 +7,14 @@ import (
 )
 
 func Base64_Encoding(msg string) string {
-	encoded := base64.StdEncoding.EncodeToString([]byte(msg))
+	//encoded := base64.StdEncoding.EncodeToString([]byte(msg))
+	encoded := base64.URLEncoding.EncodeToString([]byte(msg))
 	return encoded
 }
 
 func Base64_Decoding(msg string) string {
-	decoded, err := base64.StdEncoding.DecodeString(msg)
+	//decoded, err := base64.StdEncoding.DecodeString(msg)
+	decoded, err := base64.URLEncoding.DecodeString(msg)
 	if err != nil {
 		syslog.WAR("Base64 decoding error:", err)
 		return ""

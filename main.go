@@ -225,4 +225,18 @@ func main() {
 	if err != nil {
 		fmt.Printf("Dt: %v", err)
 	}
+
+	/*
+		UUIDFactory := NewUUIDGenerator("1234")
+
+		//Get UUID
+		for i := 0; i < 10; i++ {
+			fmt.Println(UUIDFactory.Get())
+		}
+
+		//Get UUID in uint32 form
+		for i := 0; i < 10; i++ {
+			fmt.Println(UUIDFactory.GetUint32())
+		}
+	*/
 }
