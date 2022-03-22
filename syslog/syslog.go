@@ -10,6 +10,7 @@ var logLevel int
 var logLevelStr map[int]string
 
 const (
+	RAW_LEVEL = 0
 	DBG_LEVEL = 1
 	STD_LEVEL = 2
 	WAR_LEVEL = 3
@@ -28,6 +29,7 @@ const (
 )
 
 var (
+	raw *log.Logger
 	dbg *log.Logger
 	std *log.Logger
 	wan *log.Logger
@@ -49,7 +51,8 @@ const (
 
 func init() {
 	time.LoadLocation("Asia/Seoul")
-	dbg = log.New(os.Stdout, string(colorWhite)+"[DBG] "+string(colorReset), log.LstdFlags)
+	raw = log.New(os.Stdout, string(colorWhite)+"[RAW] "+string(colorReset), log.LstdFlags)
+	dbg = log.New(os.Stdout, string(colorYellow)+"[DBG] "+string(colorReset), log.LstdFlags)
 	std = log.New(os.Stdout, string(colorCyan)+"[STD] "+string(colorReset), log.LstdFlags)
 	wan = log.New(os.Stdout, string(colorPurple)+"[WAR] "+string(colorReset), log.LstdFlags)
 	err = log.New(os.Stdout, string(colorRed)+"[ERR] "+string(colorReset), log.LstdFlags)
@@ -57,6 +60,7 @@ func init() {
 	logLevel = STD_LEVEL
 
 	logLevelStr = make(map[int]string, 4)
+	logLevelStr[RAW_LEVEL] = "RAW_LEVEL"
 	logLevelStr[DBG_LEVEL] = "DBG_LEVEL"
 	logLevelStr[STD_LEVEL] = "STD_LEVEL"
 	logLevelStr[WAR_LEVEL] = "WAR_LEVEL"
@@ -70,6 +74,20 @@ func SetLogLevel(level int) {
 	}
 	STD("Change log level: [%s] -> [%s]", logLevelStr[logLevel], logLevelStr[level])
 	logLevel = level
+}
+
+func RAW(format string, v ...interface{}) {
+	if logLevel > RAW_LEVEL {
+		return
+	}
+	raw.Printf(format, v...)
+}
+
+func RAWLN(v ...interface{}) {
+	if logLevel > RAW_LEVEL {
+		return
+	}
+	raw.Println(v...)
 }
 
 func DBG(format string, v ...interface{}) {
