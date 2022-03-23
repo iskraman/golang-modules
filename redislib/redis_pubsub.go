@@ -28,6 +28,46 @@ func NewAWS(addr string, passwd string, username string) *redis.ClusterClient {
 	return redisClient
 }
 
+func Pub(rdb interface{}, title string, data string) error {
+	var err error
+	switch rdb.(type) {
+	case *redis.Client:
+		err = rdb.(*redis.Client).Publish(ctx, title, data).Err()
+		if err != nil {
+			syslog.WAR("Publish failed: %v", err)
+		}
+	case *redis.ClusterClient:
+		err = rdb.(*redis.ClusterClient).Publish(ctx, title, data).Err()
+		if err != nil {
+			syslog.WAR("Publish failed: %v", err)
+		}
+	}
+	return err
+}
+
+func Sub(rdb interface{}, title string) *redis.PubSub {
+	switch rdb.(type) {
+	case *redis.Client:
+		subscriber := rdb.(*redis.Client).Subscribe(ctx, title)
+		return subscriber
+	case *redis.ClusterClient:
+		subscriber := rdb.(*redis.ClusterClient).Subscribe(ctx, title)
+		return subscriber
+	}
+	return nil
+}
+
+func SubRecvMsg(subscriber *redis.PubSub) (string, error) {
+	msg, err := subscriber.ReceiveMessage(ctx)
+	if err != nil {
+		syslog.WARLN("Gateway subscriber failed:", err)
+		return "", err
+	}
+
+	return msg.Payload, err
+}
+
+/*
 func Pub(rdb *redis.Client, title string, data string) error {
 	err := rdb.Publish(ctx, title, data).Err()
 	if err != nil {
@@ -50,6 +90,7 @@ func SubRecvMsg(subscriber *redis.PubSub) (string, error) {
 
 	return msg.Payload, err
 }
+*/
 
 /*
 // Publisher
