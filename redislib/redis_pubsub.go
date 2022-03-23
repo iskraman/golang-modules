@@ -18,6 +18,16 @@ func New(addr string, passwd string, db int) *redis.Client {
 	return redisClient
 }
 
+func NewAWS(addr string, passwd string, username string) *redis.ClusterClient {
+	redisClient := redis.NewClusterClient(&redis.ClusterOptions{
+		Addrs:    []string{addr},
+		Username: username,
+		Password: passwd,
+		// DB:       db,
+	})
+	return redisClient
+}
+
 func Pub(rdb *redis.Client, title string, data string) error {
 	err := rdb.Publish(ctx, title, data).Err()
 	if err != nil {
