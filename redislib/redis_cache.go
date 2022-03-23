@@ -174,7 +174,7 @@ func Keys(rdb interface{}, key string) []string {
 				return keys
 			}
 		case *redis.ClusterClient:
-			keys, cursor, err = rdb.(*redis.Client).Scan(ctx, cursor, key, 0).Result()
+			keys, cursor, err = rdb.(*redis.ClusterClient).Scan(ctx, cursor, key, 0).Result()
 			if err != nil {
 				syslog.WARLN(err)
 			}
